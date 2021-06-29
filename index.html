@@ -12,11 +12,11 @@
         <h1>Saldo</h1>
         <h1 id="saldo">$10000</h1>
         <div id="contenedor-botones-grandes" class="caja-contenedora">
-            <div id="btnIngreso" class="btnsGrandes">
+            <div id="btnIngreso" class="btnsGrandes" data-tipo="Ingreso">
                 <img alt="Signo más">
                 <p>Ingreso</p>
             </div>
-            <div id="btnEgreso" class="btnsGrandes">
+            <div id="btnEgreso" class="btnsGrandes" data-tipo="Egreso">
                 <img alt="Signo menos">
                 <p>Egreso</p>
             </div>
@@ -29,7 +29,7 @@
             <h6>Valor</h6>
             <input type="number">
             <div id="contenedor-elementos-finales">
-                <p>Verifique los campos</p>
+                <p id="msgError1">Verifique los campos</p>
                 <button>Añadir</button>
             </div>
         </div>
@@ -38,5 +38,6 @@
 
     <!-- Scripts -->
     <script src="JS/funcionesInterfazGrafica.js"></script>
+    <script src="JS/main.js"></script>
 </body>
 </html>

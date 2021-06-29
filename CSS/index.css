@@ -57,7 +57,11 @@ body {
         }
         #menu-creador {
             background-color: #1e7ecc;
-            padding: 14px;
+            padding: 0px;
+            margin-bottom: 0px;
+            height: 0px;
+            opacity: 0%;
+            transition: all .6s linear;
         }
             #menu-creador>h2 {
                 display: inline-block;
@@ -71,6 +75,8 @@ body {
                 display: inline-block;
                 border-radius: 8px;
                 margin-left: 6px;
+                opacity: 100%;
+                transition: opacity .3s linear;
             }
             #menu-creador>h6 {
                 font-size: 17px;
@@ -95,10 +101,12 @@ body {
                 margin-top: 21px;
                 align-items: center;
             }
-                #contenedor-elementos-finales>p {
+                #msgError1 {
                     color: #8e112d;
                     font-variant: all-small-caps;
                     font-weight: 600;
+                    opacity: 0%;
+                    transition: opacity .5s linear;
                 }
                 #contenedor-elementos-finales>button {
                     padding: 4px 16px;
