@@ -1,34 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/CSS/estilo.css">
-    <title>Hola</title>
+    <link rel="stylesheet" href="/CSS/index.css">
+    <title>Calculadora financiera</title>
 </head>
 <body>
-<h1>Maquetacion</h1>
+    <main>
+        <h1>Saldo</h1>
+        <h1 id="saldo">$10000</h1>
+        <div id="contenedor-botones-grandes" class="caja-contenedora">
+            <div id="btnIngreso" class="btnsGrandes">
+                <img alt="Signo más">
+                <p>Ingreso</p>
+            </div>
+            <div id="btnEgreso" class="btnsGrandes">
+                <img alt="Signo menos">
+                <p>Egreso</p>
+            </div>
+        </div>
+        <div id="menu-creador" class="caja-contenedora caja-contenedora-2">
+            <h2>Nuevo movimiento</h2>
+            <span id="tipoNuevoMovimiento">Ingreso</span>
+            <h6>Titulo</h6>
+            <input type="text">
+            <h6>Valor</h6>
+            <input type="number">
+            <div id="contenedor-elementos-finales">
+                <p>Verifique los campos</p>
+                <button>Añadir</button>
+            </div>
+        </div>
+        <div id="historial" class="caja-contenedora caja-contenedora-2"></div>
+    </main>
 
-
-<label for="">Ingresos</label>
-<input type="text" >
-<button>Ingresos</button>
-<br><br><br><br><br>
-
-<input type="text"placeholder="Historial de Egresos"readonly>
-
-<br><br><br><br><br>
-<input type="text"placeholder="$20.000"readonly>
-<br><br><br><br><br>
-
-<label for="">Egresos</label>
-<input type="text">
-
-<button>Egresos</button>
-<br><br><br>
-<input type="text"placeholder="2000 restaurante comida + -"readonly>
-
-<script src="/JS/Funcionalidad.js"></script>
+    <!-- Scripts -->
+    <script src="JS/funcionesInterfazGrafica.js"></script>
 </body>
 </html>
