@@ -1,0 +1,95 @@
+#menu-creador {
+    background-color: #1e7ecc;
+    margin-bottom: 0px;
+    height: 0px;
+    opacity: 0%;
+    transition: all .6s linear;
+}
+    #contenedor-menu-creador {
+        padding: 0px;
+        transition: all .6s linear;
+    }
+        #titulo-menu-creador {
+            display: inline-block;
+            font-size: 26px;
+            color: white;
+            margin-right: 6px;
+        }
+        #tipoNuevoMovimiento {
+            font-size: 20px;
+            background-color: #fd910db8;
+            padding: 4px;
+            display: inline-block;
+            border-radius: 8px;
+            opacity: 100%;
+            transition: opacity .3s linear;
+        }
+        .subtitulo-menu-creador {
+            font-size: 17px;
+            letter-spacing: 1px;
+            margin: 14px 0;
+            color: white;
+        }
+        .entrada-menu-creador {
+            width: 99.1%;
+            height: 30px;
+            border: 1px solid #607d8b;
+            border-radius: 5px;
+            color: black;
+            font-size: 22px;
+            outline-color: white;
+        }
+        .entrada-menu-creador:focus-visible {
+            border: 1px solid #607d8b;
+        }
+        #contenedor-elementos-finales {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 21px;
+            align-items: center;
+        }
+            #msgError1 {
+                color: #8e112d;
+                font-variant: all-small-caps;
+                font-weight: 600;
+                opacity: 0%;
+                transition: opacity .5s linear;
+            }
+            #btnAddRegister {
+                padding: 4px 16px;
+                border-radius: 7px;
+                font-size: 21px;
+                background-color: #fd9700b0;
+                border: 3px solid #00000075;
+                color: #000000c7;
+                cursor: pointer;
+            }
+    #btnOcultarMenuCreador {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 41px;
+        background-color: #1a22c86e;
+        cursor: pointer;
+    }
+        #btnOcultarMenuCreador>img {
+            width: 48px;
+            content: url("../IMGS/img-flecha-arriba.svg");
+        }
+
+/* Estilos para computador */
+@media (min-width: 1024px) {
+    #btnAddRegister:hover {
+        background-color: #c8903cb0;
+    }
+    #btnOcultarMenuCreador:hover {
+        background-color: #040c9e6e;
+    }
+}
+
+/* Estilos para teléfono */
+@media (max-width: 391px) {
+    #menu-creador[data-menu-desplegado="true"] {
+        height: 354px !important;
+    }
+}

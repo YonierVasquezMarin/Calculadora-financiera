@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/CSS/index.css">
+    <link rel="stylesheet" href="CSS/menuCreador.css">
+    <link rel="stylesheet" href="CSS/historial.css">
     <title>Calculadora financiera</title>
 </head>
 <body>
@@ -21,17 +23,22 @@
                 <p>Egreso</p>
             </div>
         </div>
-        <div id="menu-creador" class="caja-contenedora caja-contenedora-2">
-            <h2>Nuevo movimiento</h2>
-            <span id="tipoNuevoMovimiento">Ingreso</span>
-            <h6>Titulo</h6>
-            <input type="text">
-            <h6>Valor</h6>
-            <input type="number">
-            <div id="contenedor-elementos-finales">
-                <p id="msgError1">Verifique los campos</p>
-                <button>Añadir</button>
+        <div id="menu-creador" class="caja-contenedora caja-contenedora-2" data-menu-desplegado="false">
+            <div id="contenedor-menu-creador">
+                <h2 id="titulo-menu-creador">Nuevo movimiento</h2>
+                <span id="tipoNuevoMovimiento">Ingreso</span>
+                <h6 class="subtitulo-menu-creador">Titulo</h6>
+                <input id="tituloMovimiento" type="text" class="entrada-menu-creador">
+                <h6 class="subtitulo-menu-creador">Valor</h6>
+                <input id="valorMovimiento" type="number" class="entrada-menu-creador">
+                <div id="contenedor-elementos-finales">
+                    <p id="msgError1">Verifique los campos</p>
+                    <button id="btnAddRegister">Añadir</button>
+                </div>
             </div>
+            <span id="btnOcultarMenuCreador">
+                <img alt="icono cerrar menu">
+            </span>
         </div>
         <div id="historial" class="caja-contenedora caja-contenedora-2"></div>
     </main>
