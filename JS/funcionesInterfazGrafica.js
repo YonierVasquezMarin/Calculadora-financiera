@@ -1,5 +1,4 @@
 var elMenuEstaDesplegado = false
-var elMsgError1EstaVisible = false
 
 /**
  * Desplegar el menú creador el cual permanece oculto,
@@ -103,10 +102,4 @@ function cambiarVisibilidadMsgError1(seMuestra) {
     } else {
         msgError1.style = "opacity: 0%"
     }
-
-    // if(!losDatosDelMovimientoEstanFull()) {
-    //     msgError1.style = "opacity: 100%"
-    // } else {
-    //     msgError1.style = "opacity: 0%"
-    // }
 }
