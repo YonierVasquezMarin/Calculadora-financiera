@@ -1,62 +1,91 @@
 #historial {
-    min-height: 100px;
+    min-height: 135px;
     background-color: #1e7ecc;
     padding: 14px;
 }
     #historial>h2 {
         color: white;
         font-size: 25px;
-        margin-bottom: 15px;
+        text-align: center;
+        margin-bottom: 5px;
     }
-    .item-registro {
-        background-color: white;
+    #lista-registros {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
     }
-        .contenedor-registro {
-            display: flex;
-            flex-flow: row nowrap;
-            max-width: 377px;
-            min-height: 93px;
-            margin: 0 auto;
-            align-items: flex-start;
-            padding: 10px;
-            justify-content: center;
+        .item-registro {
+            background-color: white;
+            width: 244px;
+            margin: 7px;
+            box-sizing: border-box;
+            border-radius: 8px;
+            min-height: 128px;
         }
-            .contenedor-registro>img {
-                width: 55px;
-                margin-right: 11px;
-            }
-            .img-adicion {
-                content: url("../IMGS/img-adicion-rellenado.svg");
-            }
-            .img-substraccion {
-                content: url("../IMGS/img-substraccion-rellenado.svg");
-            }
-            .contenedor-titulo-precio {
-                width: 175px;
-            }
-                .contenedor-titulo-precio>p:nth-child(1) {
-                    font-size: 29px;
-                    margin-bottom: 15px;
-                    margin-top: 2px;
-                }
-                .contenedor-titulo-precio>p:nth-child(2) {
-                    font-size: 19px;
-                }
-            .contenedor-btns-edit {
+            .contenedor-registro {
                 display: flex;
-                flex-direction: column;
-                width: 39px;
-                align-items: center;
-                margin-left: 20px;
+                flex-flow: row nowrap;
+                max-width: 377px;
+                min-height: 93px;
+                margin: 0 auto;
+                align-items: flex-start;
+                padding: 10px;
+                justify-content: center;
             }
-                .contenedor-btns-edit img {
-                    width: 36px;
-                    display: block;
+                .contenedor-registro>img {
+                    width: 61px;
+                    margin-right: auto;
                 }
-                .btnEditar>img {
-                    content: url("../IMGS/img-editar.svg");
-                    margin-bottom: 10px;
+                .img-adicion {
+                    content: url("../IMGS/img-adicion-rellenado.svg");
                 }
-                .btnEliminar>img {
-                    content: url("../IMGS/img-eliminar.svg");
+                .img-substraccion {
+                    content: url("../IMGS/img-substraccion-rellenado.svg");
                 }
+                .contenedor-titulo-precio {
+                    width: 175px;
+                    padding-left: 8px;
+                    margin: 0 auto;
+                }
+                    .contenedor-titulo-precio>p:nth-child(1) {
+                        font-size: 22px;
+                        margin: 2px 0 6px 0px;
+                        color: #000000de;
+                    }
+                    .contenedor-titulo-precio>p:nth-child(2) {
+                        font-size: 19px;
+                        color: #9c27b0;
+                    }
+                .contenedor-btns-edit {
+                    display: flex;
+                    flex-direction: column;
+                    width: 39px;
+                    align-items: center;
+                    margin-left: 20px;
+                    transition: opacity .3s linear;
+                }
+                    .contenedor-btns-edit img {
+                        width: 29px;
+                        display: block;
+                    }
+                    .btnEditar>img {
+                        content: url("../IMGS/img-editar.svg");
+                        margin-bottom: 12px;
+                    }
+                    .btnEliminar>img {
+                        content: url("../IMGS/img-eliminar.svg");
+                    }
+
+@media (max-width: 590px) {
+    .item-registro {
+        max-width: 384px;
+    }
+}
+@media (min-width: 769px) {
+    .contenedor-btns-edit {
+        opacity: 0%;
+    }
+    .item-registro:hover .contenedor-btns-edit {
+        opacity: 100%;
+    }
+}

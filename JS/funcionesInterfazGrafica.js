@@ -8,7 +8,7 @@ function desplegarMenuCreador() {
     if(!elMenuEstaDesplegado) {
         elMenuEstaDesplegado = true;
         const menuCreador = document.querySelector("#menu-creador")
-        menuCreador.style = "margin-bottom: 28px;height: 324px;opacity: 100%;"
+        menuCreador.style = "margin-bottom: 28px;height: 324px;opacity: 100%;z-index:0"
         const contenedorMenuCreador = document.querySelector("#contenedor-menu-creador")
         contenedorMenuCreador.style = "padding: 14px"
         menuCreador.setAttribute("data-menu-desplegado", "true")
