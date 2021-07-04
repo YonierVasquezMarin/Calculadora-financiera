@@ -72,6 +72,20 @@ function obtenerValorMovimientoACrear() {
 }
 
 /**
+ * Extrae el tipo de movimiento del menu creador.
+ * @returns si es ingreso retorna true, si es egreso retorna
+ * false.
+ */
+function elMovimientoACrearEsIngreso() {
+    let tipoMovimiento = document.querySelector("#tipoNuevoMovimiento").innerHTML
+    if(tipoMovimiento=="Ingreso") {
+        return true
+    } else {
+        return false
+    }
+}
+
+/**
  * Verifica que ambos campos del titulo y valor del movimiento no estén 
  * vacíos.
  * @param {String} tituloMovimiento el titulo del movimiento ingresado por 
@@ -102,4 +116,35 @@ function cambiarVisibilidadMsgError1(seMuestra) {
     } else {
         msgError1.style = "opacity: 0%"
     }
+}
+
+/**
+ * Con los parámetros ingresados se imprime un nuevo registro 
+ * en pantalla, al final del ultimo registro que exista.
+ * @param {String} titulo el titulo del nuevo registro a 
+ * imprimir en pantalla.
+ * @param {Number} valor el valor del nuevo registro.
+ * @param {Boolean} esIngreso si el nuevo registro es un 
+ * ingreso se especifica true, en cambio si el un egreso se
+ * especifica false.
+ * @param {Number} id un id unico que identifica al nuevo registro.
+ */
+function mostrarRegistroEnPantalla(titulo, valor, esIngreso, id) {
+    let itemRegistro = document.createElement("div")
+    itemRegistro.classList.add("item-registro")
+    let composicionInterna = `<div class="contenedor-registro" data-id="${id}">
+    <img class="img-${esIngreso?'adicion':'substraccion'}" alt="signo tipo ingreso">
+    <div class="contenedor-titulo-precio">
+    <p>${titulo}</p>
+    <p>$${valor}</p>
+    </div>
+    <div class="contenedor-btns-edit">
+    <span class="btnEditar" data-id="${id}"><img class="btn" alt="boton editar"></span>
+    <span class="btnEliminar" data-id="${id}"><img class="btn" alt="boton eliminar"></span>
+    </div>
+    </div>`
+    itemRegistro.innerHTML = composicionInterna
+    
+    let listaRegistros = document.querySelector("#lista-registros")
+    listaRegistros.appendChild(itemRegistro)
 }
