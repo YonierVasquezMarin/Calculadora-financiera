@@ -30,7 +30,7 @@ document.querySelector("#btnAddRegister").addEventListener("click", ()=> {
         //Aqui se usa "generarId()"
         //Aquí se guarda en memoria el registro
         let esIngreso = elMovimientoACrearEsIngreso()
-        mostrarRegistroEnPantalla(tituloMovimiento, valorMovimiento, esIngreso)
+        mostrarRegistroEnPantalla(tituloMovimiento, valorMovimiento, esIngreso, 0)
     } else {
         cambiarVisibilidadMsgError1(true)
     }
@@ -42,4 +42,15 @@ document.querySelector("#btnAddRegister").addEventListener("click", ()=> {
  */
 document.querySelector("#btnOcultarMenuCreador").addEventListener("click", ()=> {
     ocultarMenuCreador()
+})
+
+/**
+ * Cuando se hace click en cualquier icono de bote de basura de 
+ * cualquier item de registro.
+ */
+document.querySelectorAll(".btnEliminar").forEach((btnEliminar)=>{
+    btnEliminar.addEventListener("click", (event)=>{
+        let idItemRegistro = event.currentTarget.getAttribute("data-id")
+        mostrarEliminadorDeRegistro(idItemRegistro)
+    })
 })

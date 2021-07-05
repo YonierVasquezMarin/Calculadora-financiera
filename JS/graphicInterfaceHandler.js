@@ -139,12 +139,31 @@ function mostrarRegistroEnPantalla(titulo, valor, esIngreso, id) {
     <p>$${valor}</p>
     </div>
     <div class="contenedor-btns-edit">
-    <span class="btnEditar" data-id="${id}"><img class="btn" alt="boton editar"></span>
-    <span class="btnEliminar" data-id="${id}"><img class="btn" alt="boton eliminar"></span>
+    <span class="btnEditar" title="Editar" data-id="${id}"><img class="btn" alt="boton editar"></span>
+    <span class="btnEliminar" title="Eliminar" data-id="${id}"><img class="btn" alt="boton eliminar"></span>
     </div>
     </div>`
     itemRegistro.innerHTML = composicionInterna
     
     let listaRegistros = document.querySelector("#lista-registros")
     listaRegistros.appendChild(itemRegistro)
+}
+
+/**
+ * Muestra una capa encima del item del registro especificado 
+ * con el id. La capa son opciones para borrar el item de 
+ * registro.
+ * @param {Number} idRegistro El id del registro que está 
+ * en la pantalla.
+ */
+function mostrarEliminadorDeRegistro(idRegistro) {
+    const capasParaBorrarRegistros = document.querySelectorAll(".opciones-de-borrado")
+    capasParaBorrarRegistros.forEach((capa)=>{
+        if(capa.getAttribute("data-id")==idRegistro) {
+            capa.style = "display: block;"
+            setTimeout(() => {
+                capa.style = capa.getAttribute("style") + "opacity: 100%;"
+            }, 100);
+        }
+    })
 }

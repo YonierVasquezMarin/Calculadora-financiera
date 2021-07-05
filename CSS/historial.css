@@ -21,6 +21,7 @@
             box-sizing: border-box;
             border-radius: 8px;
             min-height: 128px;
+            position: relative;
         }
             .contenedor-registro {
                 display: flex;
@@ -75,17 +76,52 @@
                     .btnEliminar>img {
                         content: url("../IMGS/img-eliminar.svg");
                     }
+            .opciones-de-borrado {
+                width: 100%;
+                height: 100%;
+                background-color: #a8a7a6;
+                position: absolute;
+                top: 0;
+                border-radius: 8px;
+                padding: 10px;
+                box-sizing: border-box;
+                display: none;
+                opacity: 0%;
+                transition: opacity .3s linear;
+            }
+                .opciones-de-borrado>h3 {
+                    color: #3c3c3c;
+                    font-size: 21px;
+                    margin-bottom: 14px;
+                }
+                .btn-capa-borrado {
+                    height: 30px;
+                    border-radius: 3px;
+                    border: 1px solid #000000ba;
+                    font-size: 16px;
+                    color: #303030;
+                }
+                    .btnBorrar {
+                        margin-right: 14px;
+                        background-color: #2cc2d5;
+                    }
+                    
+                    .btnCancelarBorrado {
+                        background-color: #ffffffb3;
+                    }
 
-@media (max-width: 590px) {
-    .item-registro {
-        max-width: 384px;
-    }
-}
+/* Estilos solo para PC */
 @media (min-width: 769px) {
     .contenedor-btns-edit {
         opacity: 0%;
     }
     .item-registro:hover .contenedor-btns-edit {
         opacity: 100%;
+    }
+    .btnBorrar:active {
+        background-color: #a14040;
+    }
+    .btnCancelarBorrado:active {
+        background-color: #c3c3c3b3;
     }
 }
