@@ -79,15 +79,16 @@
             .opciones-de-borrado {
                 width: 100%;
                 height: 100%;
-                background-color: #a8a7a6;
+                background-color: white;
                 position: absolute;
                 top: 0;
                 border-radius: 8px;
-                padding: 10px;
+                padding: 8px 13px;
                 box-sizing: border-box;
                 display: none;
                 opacity: 0%;
                 transition: opacity .3s linear;
+                border: 1px solid red;
             }
                 .opciones-de-borrado>h3 {
                     color: #3c3c3c;
@@ -103,11 +104,15 @@
                 }
                     .btnBorrar {
                         margin-right: 14px;
-                        background-color: #2cc2d5;
+                        background-color: #3a81e3;
+                        color: white;
+                        border: 1px solid blue;
                     }
                     
                     .btnCancelarBorrado {
                         background-color: #ffffffb3;
+                        border: 1px solid #1c57ed;
+                        color: #0334e5;
                     }
 
 /* Estilos solo para PC */
@@ -123,5 +128,16 @@
     }
     .btnCancelarBorrado:active {
         background-color: #c3c3c3b3;
+    }
+}
+
+/* Estilos para telefono */
+@media (max-width: 588px) {
+    #list-registros {
+        max-width: 352px;
+        margin: 0 auto;
+    }
+    .item-registro {
+        width: 100%;
     }
 }
