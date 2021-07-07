@@ -1,11 +1,12 @@
 var elMenuEstaDesplegado = false
+var lasOpcionesDeEliminacionEstanEn = 0; //id del registro que tiene las opciones de eliminacion abiertas
 
 /**
  * Desplegar el menú creador el cual permanece oculto,
  * y éste sólo aparece al llamar a esta función.
  */
 function desplegarMenuCreador() {
-    if(!elMenuEstaDesplegado) {
+    if (!elMenuEstaDesplegado) {
         elMenuEstaDesplegado = true;
         const menuCreador = document.querySelector("#menu-creador")
         menuCreador.style = "margin-bottom: 28px;height: 324px;opacity: 100%;z-index:0"
@@ -25,7 +26,7 @@ function ocultarMenuCreador() {
     const contenedorMenuCreador = document.querySelector("#contenedor-menu-creador")
     contenedorMenuCreador.style = ""
     menuCreador.setAttribute("data-menu-desplegado", "false")
-    setTimeout(()=>{
+    setTimeout(() => {
         menuCreador.style = ""
     }, 650)
 }
@@ -41,10 +42,10 @@ function ocultarMenuCreador() {
 function cambiarTipoMovimientoEnPantalla(tipoMovimiento) {
     const tipoMovientoElement = document.querySelector("#tipoNuevoMovimiento")
     tipoMovientoElement.style = "opacity: 0%;"
-            setTimeout(() => {
-                tipoMovientoElement.innerHTML = tipoMovimiento
-                tipoMovientoElement.style = "opacity: 100%;"
-            }, 300)
+    setTimeout(() => {
+        tipoMovientoElement.innerHTML = tipoMovimiento
+        tipoMovientoElement.style = "opacity: 100%;"
+    }, 300)
 }
 
 /**
@@ -78,7 +79,7 @@ function obtenerValorMovimientoACrear() {
  */
 function elMovimientoACrearEsIngreso() {
     let tipoMovimiento = document.querySelector("#tipoNuevoMovimiento").innerHTML
-    if(tipoMovimiento=="Ingreso") {
+    if (tipoMovimiento == "Ingreso") {
         return true
     } else {
         return false
@@ -96,7 +97,7 @@ function elMovimientoACrearEsIngreso() {
  * contienen texto, o retorna false si uno o los dos campos están vacios.
  */
 function losDatosDelMovimientoEstanFull(tituloMovimiento, valorMovimiento) {
-    if(tituloMovimiento=="" || valorMovimiento=="") {
+    if (tituloMovimiento == "" || valorMovimiento == "") {
         return false
     }
     return true
@@ -111,7 +112,7 @@ function losDatosDelMovimientoEstanFull(tituloMovimiento, valorMovimiento) {
  */
 function cambiarVisibilidadMsgError1(seMuestra) {
     const msgError1 = document.querySelector("#msgError1")
-    if(seMuestra) {
+    if (seMuestra) {
         msgError1.style = "opacity: 100%"
     } else {
         msgError1.style = "opacity: 0%"
@@ -132,19 +133,26 @@ function cambiarVisibilidadMsgError1(seMuestra) {
 function mostrarRegistroEnPantalla(titulo, valor, esIngreso, id) {
     let itemRegistro = document.createElement("div")
     itemRegistro.classList.add("item-registro")
-    let composicionInterna = `<div class="contenedor-registro" data-id="${id}">
-    <img class="img-${esIngreso?'adicion':'substraccion'}" alt="signo tipo ingreso">
-    <div class="contenedor-titulo-precio">
-    <p>${titulo}</p>
-    <p>$${valor}</p>
-    </div>
-    <div class="contenedor-btns-edit">
-    <span class="btnEditar" title="Editar" data-id="${id}"><img class="btn" alt="boton editar"></span>
-    <span class="btnEliminar" title="Eliminar" data-id="${id}"><img class="btn" alt="boton eliminar"></span>
-    </div>
-    </div>`
+    itemRegistro.setAttribute("data-id",id)
+    let composicionInterna =
+        `<div class="contenedor-registro">
+            <img class="img-${esIngreso ? 'adicion' : 'substraccion'}" alt="signo tipo ingreso">
+            <div class="contenedor-titulo-precio">
+                <p>${titulo}</p>
+                <p>$${valor}</p>
+            </div>
+            <div class="contenedor-btns-edit">
+                <span class="btnEditar" title="Editar"><img class="btn" alt="boton editar"></span>
+                <span class="btnMostrarOpcionesDeEliminado" title="Eliminar"><img class="btn" alt="boton eliminar"></span>
+            </div>
+        </div>
+        <div class="opciones-de-borrado" data-id="${id}">
+            <h3>¿Está seguro de borrar esto?</h3>
+            <button class="btnBorrarRegistro btn btn-capa-borrado">Borrar</button>
+            <button class="btnCancelarBorrado btn btn-capa-borrado">Cancelar</button>
+        </div>`
     itemRegistro.innerHTML = composicionInterna
-    
+
     let listaRegistros = document.querySelector("#lista-registros")
     listaRegistros.appendChild(itemRegistro)
 }
@@ -157,13 +165,41 @@ function mostrarRegistroEnPantalla(titulo, valor, esIngreso, id) {
  * en la pantalla.
  */
 function mostrarEliminadorDeRegistro(idRegistro) {
+    if(lasOpcionesDeEliminacionEstanEn!=0) {
+        ocultarEliminadorDeRegistro(lasOpcionesDeEliminacionEstanEn)
+    }
+    lasOpcionesDeEliminacionEstanEn = idRegistro
     const capasParaBorrarRegistros = document.querySelectorAll(".opciones-de-borrado")
-    capasParaBorrarRegistros.forEach((capa)=>{
-        if(capa.getAttribute("data-id")==idRegistro) {
+    capasParaBorrarRegistros.forEach((capa) => {
+        if (capa.getAttribute("data-id") == idRegistro) {
             capa.style = "display: block;"
             setTimeout(() => {
                 capa.style = capa.getAttribute("style") + "opacity: 100%;"
             }, 100);
+        }
+    })
+}
+
+
+function ocultarEliminadorDeRegistro(idRegistro) {
+    const capasParaBorrarRegistros = document.querySelectorAll(".opciones-de-borrado")
+    capasParaBorrarRegistros.forEach((capa) => {
+        if (capa.getAttribute("data-id") == idRegistro) {
+            capa.style = capa.getAttribute("style") + "opacity: 0%;"
+            setTimeout(() => {
+                capa.style = "display: none;"
+            }, 300);
+        }
+    })
+    lasOpcionesDeEliminacionEstanEn = 0
+}
+
+
+function eliminarRegistroDePantalla(idRegistro) {
+    const registros = document.querySelectorAll(".item-registro")
+    registros.forEach((itemRegistro)=>{
+        if(itemRegistro.getAttribute("data-id")==idRegistro) {
+            itemRegistro.remove()
         }
     })
 }

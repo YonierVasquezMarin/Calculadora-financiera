@@ -73,7 +73,7 @@
                         content: url("../IMGS/img-editar.svg");
                         margin-bottom: 12px;
                     }
-                    .btnEliminar>img {
+                    .btnMostrarOpcionesDeEliminado>img {
                         content: url("../IMGS/img-eliminar.svg");
                     }
             .opciones-de-borrado {
@@ -91,7 +91,7 @@
                 border: 1px solid red;
             }
                 .opciones-de-borrado>h3 {
-                    color: #3c3c3c;
+                    color: #3c3c3ce8;
                     font-size: 21px;
                     margin-bottom: 14px;
                 }
@@ -102,11 +102,11 @@
                     font-size: 16px;
                     color: #303030;
                 }
-                    .btnBorrar {
+                    .btnBorrarRegistro {
                         margin-right: 14px;
-                        background-color: #3a81e3;
+                        background-color: #e95558;
                         color: white;
-                        border: 1px solid blue;
+                        border: 1px solid #ef0004;
                     }
                     
                     .btnCancelarBorrado {
@@ -123,7 +123,7 @@
     .item-registro:hover .contenedor-btns-edit {
         opacity: 100%;
     }
-    .btnBorrar:active {
+    .btnBorrarRegistro:active {
         background-color: #a14040;
     }
     .btnCancelarBorrado:active {
