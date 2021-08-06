@@ -15,9 +15,10 @@ body {
             font-size: 31px;
             color: white;
         }
-        #saldo {
+        .txtSaldo {
             font-size: 64px;
             margin-bottom: 12px;
+            display: inline-block;
         }
         .caja-contenedora {
             margin-bottom: 28px;

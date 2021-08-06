@@ -1,16 +1,23 @@
+/**
+ * Determina el id mayor de los registros guardados y retorna ese id+1.
+ * @returns {Number} el id que debe usar el nuevo registro.
+ */
 function generarId() {
-    /*
-    Generar id para cada item de registro.
-
-    Se recorre todos los registros del localStorage
-    y se obtiene todos los id, se busca el mayor de ellos.
-    Y el nuevo id que retorna esta funcion es el id mayor+1.
-
-    De esta forma todos los registros tienen id diferentes.
-    */
-    let itemsRegistrosJSON = localStorage.getItem("itemsRegistrosJSON")
-    if(itemsRegistrosJSON!=null) {
-        
+    let datosAlmacenadosDeRegistros = obtenerTodosLosRegistros()
+    if(datosAlmacenadosDeRegistros.length!=0) {
+        let itemsRegistros = datosAlmacenadosDeRegistros
+        //Obtener los ids de todos los registros
+        let listaIDs = []
+        for(let i=0;i<itemsRegistros.length;i++) {
+            listaIDs.push(itemsRegistros[i].id)
+        }
+        //Determinar el id mayor
+        function getMaxOfArray(numArray) {
+            return Math.max.apply(null, numArray);
+        }
+        return getMaxOfArray(listaIDs)+1
+    } else {
+        return 1
     }
 }
 
@@ -38,58 +45,102 @@ function reajustarSaldo(valor, esIngreso) {
     */
 }
 
+/**
+ * Guarda los datos de un registro en un JSON dentro de localStorage
+ * @param {String} titulo el titulo del nuevo movimiento.
+ * @param {Number} valor 
+ * @param {Boolean} esIngreso 
+ * @param {Number} id 
+ */
 function crearRegistro(titulo, valor, esIngreso, id) {
-    /*
-    Crea un nuevo registro en localStorage.
-
-    El valor del parametro del "id" se encarga la funcion
-    "generarId()".
-
-    Siempre se crea un nuevo registro sin importar que tenga 
-    el mismo titulo o el mismo valor.
-    Si el titulo o valor son iguales a otro registro almacenado 
-    no interesa, porque el parametro id siempre será diferente.
-
-    Dentro de esta funcion no se necesita que se comprueben que 
-    los datos estén vacíos. La interfaz gráfica se encarga de ello.
-    */
+    let datosAlmacenadosDeRegistros = obtenerTodosLosRegistros()
+    let itemsRegistros = []
+    let nuevoRegistro = {}
+    if(datosAlmacenadosDeRegistros.length!=0) {
+        //Ya existen registros, por tanto se agrega el nuevo al final
+        itemsRegistros = datosAlmacenadosDeRegistros
+        nuevoRegistro = {
+            "titulo": titulo,
+            "valor": valor,
+            "esIngreso": esIngreso,
+            "id": id
+        }
+    } else {
+        //No existen registros, por tanto se crea el primero y se guarda
+        itemsRegistros = []
+        nuevoRegistro = {
+            "titulo": titulo,
+            "valor": valor,
+            "esIngreso": esIngreso,
+            "id": id
+        }
+    }
+    itemsRegistros.push(nuevoRegistro)
+    guardarRegistro(itemsRegistros)
 }
 
-function actualizarRegistro(titulo, valor, esIngreso, id) {
-    /*
-    Se trae el String de localStorage, se convierte a json,
-    se agrega la nueva actualizacion al registro que corresponda,
-    luego se convierte el json de nuevo a un string y se almacena
-    en la misma variable del localStorage.
-    */
+function actualizarRegistro(titulo, valor, esIngreso, idRegistro) {
+    //Buscar el registro con el id dado
+    let listaRegistros = obtenerTodosLosRegistros()
+    for(var i=0;i<listaRegistros.length;i++) {
+        var registro = listaRegistros[i]
+        if(registro["id"] == idRegistro) {
+            //Cuando se halla el registro con el mismo id, se pasa a cambiar sus valores
+            registro["titulo"] = titulo
+            registro["valor"] = valor
+            registro["esIngreso"] = esIngreso
+            //Se guarda de nuevo dentro de la lista
+            listaRegistros[i] = registro
+            break
+        }
+    }
+    //Guardar de nuevo la lista
+    guardarRegistro(listaRegistros)
 }
 
+/**
+ * Busca el id del registro dado y lo borra de la lista del 
+ * localStorage.
+ * @param {Number} id el id del registro a eliminar.
+ */
 function borrarRegistro(id) {
-    /*
-    Acá se borra un registro de localStorage usando el id
-    del registro a eliminar.
-
-    No se necesita que dentro de esta funcion se compruebe que 
-    el registro exista, la interfaz se encarga de ello.
-    */
+    let listaRegistros = obtenerTodosLosRegistros()
+    if(listaRegistros.length!=0) {
+        //Recorrer todos los registros buscando el id, y cuando se encuentre borrar ese objeto
+        for(let i=0;i<listaRegistros.length;i++) {
+            let registro = listaRegistros[i]
+            if(registro["id"]==id) {
+                listaRegistros.splice(i, 1)
+                break
+            }
+        }
+        //Guardar la nueva lista de registro en localStorage
+        guardarRegistro(listaRegistros)
+    }
 }
 
+/**
+ * Retorna una lista con objetos JSON, y donde cada objeto es 
+ * un registro guardado.
+ * @returns {Array} una lista JSON con todos los registros.
+ */
 function obtenerTodosLosRegistros() {
-    /*
-    Para cuando se visita la pagina de nuevo y se necesita 
-    recuperar todos los registros que estén almacenados en 
-    localStorage.
-    Esta funcion retorna un arreglo de objetos javascript
-    (ver la nota al final para ver como es la estructura).
-
-    Esta funcion obtiene todos los registros y los retorna 
-    en un objeto javascript, y la interfaz grafica se encarga 
-    de mostrarlos en pantalla.
-    */
+    let datosAlmacenadosDeRegistros = localStorage.getItem("itemsRegistrosJSON")
+    if(datosAlmacenadosDeRegistros!=null) {
+        let itemsRegistros = JSON.parse(datosAlmacenadosDeRegistros)
+        return itemsRegistros
+    } else {
+        return []
+    }
 }
 
-
-//NOTA: talvez falten mas funciones :)
+/**
+ * Recibe un JSON (lista con objetos), y lo guarda en localStorage.
+ * @param {JSON} listaConRegistros el json a guardar.
+ */
+function guardarRegistro(listaConRegistros) {
+    localStorage.setItem("itemsRegistrosJSON", JSON.stringify(listaConRegistros))
+}
 
 
 

@@ -25,12 +25,12 @@ document.querySelectorAll(".entrada-menu-creador").forEach((input)=>{
  */
 document.querySelector("#btnAddRegister").addEventListener("click", ()=> {
     let tituloMovimiento = obtenerTituloMovimientoACrear()
-    let valorMovimiento = obtenerValorMovimientoACrear()
+    let valorMovimiento = Number.parseInt(obtenerValorMovimientoACrear())
     if(losDatosDelMovimientoEstanFull(tituloMovimiento, valorMovimiento)) {
-        //Aqui se usa "generarId()"
-        //Aquí se guarda en memoria el registro y se debe usar el id generado por la funcion anterior
+        let nuevoId = generarId()
         let esIngreso = elMovimientoACrearEsIngreso()
-        mostrarRegistroEnPantalla(tituloMovimiento, valorMovimiento, esIngreso, 0)
+        crearRegistro(tituloMovimiento, valorMovimiento, esIngreso, nuevoId)
+        mostrarRegistroEnPantalla(tituloMovimiento, valorMovimiento, esIngreso, nuevoId)
     } else {
         cambiarVisibilidadMsgError1(true)
     }
@@ -50,70 +50,84 @@ document.querySelector("#btnOcultarMenuCreador").addEventListener("click", ()=> 
  */
 const observer = new MutationObserver((mutationList)=>{
     mutationList.forEach(mutation=>{
-        const itemRegistro = mutation.addedNodes[0]
-        const idItemRegistro = itemRegistro.getAttribute("data-id")
-        /**
-         * Para cuando se hace click en el bote de basura
-         */
-        itemRegistro.querySelector(".btnMostrarOpcionesDeEliminado").addEventListener("click", ()=>{
-            mostrarEliminadorDeRegistro(idItemRegistro)
-        })
-        /**
-         * Para cuando se hace click en el boton de borrar registro
-         */
-        itemRegistro.querySelector(".btnBorrarRegistro").addEventListener("click", ()=>{
-            eliminarRegistroDePantalla(idItemRegistro)
-        })
-        /**
-         * Para cuando se hace click en boton de cancelar borrado
-         */
-        itemRegistro.querySelector(".btnCancelarBorrado").addEventListener("click", ()=>{
-            ocultarEliminadorDeRegistro(idItemRegistro)
-        })
-        /**
-         * Para cuando se hace click en el botón de editar registro
-         */
-        itemRegistro.querySelector(".btnEditar").addEventListener("click", () => {
-            mostrarEditorDeRegistro(idItemRegistro)
-        })
-        /**
-         * Para cuando se hace click en el botón de cerrar el menú de 
-         * edición.
-         */
-        itemRegistro.querySelector(".btnCancelar").addEventListener("click", () => {
-            ocultarEditorDeRegistro(idItemRegistro)
-            restaurarEditorDeRegistro(idItemRegistro)
-        })
-        /**
-         * Para cuando en el menú de edición se cambia el tipo de movimiento
-         */
-        itemRegistro.querySelector(".zona-tipo-ingreso").addEventListener("click", () => {
-            cambiarTipoMovimientoEnEditor(idItemRegistro)
-        })
-        /**
-         * Para cuando se hace click en el botón de actualizar el registro en el 
-         * menú de edición.
-         */
-        itemRegistro.querySelector(".btnActualizar").addEventListener("click", () => {
-            let nuevoTitulo = obtenerNuevoTituloDelMovimiento(idItemRegistro)
-            let nuevoValor =  obtenerNuevoValorDelMovimiento(idItemRegistro)
-            let losDatosEstanCompletos = losDatosDelMovimientoEstanFull(nuevoTitulo,nuevoValor)
-            if(losDatosEstanCompletos) {
-                let nNuevoValor = Number.parseInt(nuevoValor)
-                let esIngreso = obtenerNuevoTipoDelMovimiento(idItemRegistro)
-                if(nNuevoValor>0) {
-                    actualizarRegistroDePantalla(nuevoTitulo, nuevoValor, esIngreso, idItemRegistro)
-                    ocultarEditorDeRegistro(idItemRegistro)
-                    restaurarEditorDeRegistro(idItemRegistro)
+        try {
+            const itemRegistro = mutation.addedNodes[0]
+            const idItemRegistro = itemRegistro.getAttribute("data-id")
+            /**
+             * Para cuando se hace click en el botón de editar registro
+             */
+            itemRegistro.querySelector(".btnEditar").addEventListener("click", () => {
+                mostrarEditorDeRegistro(idItemRegistro)
+            })
+            /**
+             * Para cuando en el menú de edición se cambia el tipo de movimiento
+             */
+            itemRegistro.querySelector(".zona-tipo-ingreso").addEventListener("click", () => {
+                cambiarTipoMovimientoEnEditor(idItemRegistro)
+            })
+            /**
+             * Para cuando se hace click en el botón de actualizar el registro en el 
+             * menú de edición.
+             */
+            itemRegistro.querySelector(".btnActualizar").addEventListener("click", () => {
+                let nuevoTitulo = obtenerNuevoTituloDelMovimiento(idItemRegistro)
+                let nuevoValor =  obtenerNuevoValorDelMovimiento(idItemRegistro)
+                let losDatosEstanCompletos = losDatosDelMovimientoEstanFull(nuevoTitulo,nuevoValor)
+                if(losDatosEstanCompletos) {
+                    let nNuevoValor = Number.parseInt(nuevoValor)
+                    let esIngreso = obtenerNuevoTipoDelMovimiento(idItemRegistro)
+                    if(nNuevoValor>0) {
+                        actualizarRegistroDePantalla(nuevoTitulo, nuevoValor, esIngreso, idItemRegistro)
+                        actualizarRegistro(nuevoTitulo, nuevoValor, esIngreso, idItemRegistro)
+                        ocultarEditorDeRegistro(idItemRegistro)
+                        restaurarEditorDeRegistro(idItemRegistro)
+                    } else {
+                        //El nuevo valor ingresado es cero o negativo
+                        mostrarMsgError2("El valor debe ser mayor a 0")
+                    }
                 } else {
-                    //El nuevo valor ingresado es cero o negativo
-                    mostrarMsgError2("El valor debe ser mayor a 0")
+                    //Alguno o los dos campos están vacíos
+                    mostrarMsgError2("Llene todos los campos")
                 }
-            } else {
-                //Alguno o los dos campos están vacíos
-                mostrarMsgError2("Llene todos los campos")
-            }
-        })
+            })
+            /**
+             * Para cuando se hace click en el botón de cerrar el menú de 
+             * edición.
+             */
+            itemRegistro.querySelector(".btnCancelar").addEventListener("click", () => {
+                ocultarEditorDeRegistro(idItemRegistro)
+                restaurarEditorDeRegistro(idItemRegistro)
+            })
+            /**
+             * Para cuando se hace click en el bote de basura
+             */
+            itemRegistro.querySelector(".btnMostrarOpcionesDeEliminado").addEventListener("click", ()=>{
+                mostrarEliminadorDeRegistro(idItemRegistro)
+            })
+            /**
+             * Para cuando se hace click en el boton de borrar registro
+             */
+            itemRegistro.querySelector(".btnBorrarRegistro").addEventListener("click", ()=>{
+                const elRegistroEraIngreso = elMovimientoRegistradoEsIngreso()
+                let valorDelMovimiento = obtenerValorDelMovimientoRegistrado()
+                if(elRegistroEraIngreso) {
+                    valorDelMovimiento = -valorDelMovimiento
+                }
+                modificarSaldoDePantalla(valorDelMovimiento)
+                ocultarEliminadorDeRegistro(idItemRegistro)
+                eliminarRegistroDePantalla(idItemRegistro)
+                borrarRegistro(idItemRegistro)
+            })
+            /**
+             * Para cuando se hace click en boton de cancelar borrado
+             */
+            itemRegistro.querySelector(".btnCancelarBorrado").addEventListener("click", ()=>{
+                ocultarEliminadorDeRegistro(idItemRegistro)
+            })
+        } catch(TypeError) {
+            //Algún elemento fue borrado
+        }
+        
     })
 })
 const listaDeRegistros = document.querySelector("#lista-registros")
@@ -122,11 +136,15 @@ const observerOptions = {
 }
 observer.observe(listaDeRegistros,observerOptions)
 
-
-//Cargar todos los registros en pantalla
-//TEST
-mostrarRegistroEnPantalla("Factura energia",52000,false,1)
-mostrarRegistroEnPantalla("Salario",250000,true,2)
-mostrarRegistroEnPantalla("Factura internet",47000,false,3)
-mostrarRegistroEnPantalla("Tienda sillas de escritorio",300000,true,4)
-//TEST
+/**
+ * Cargar todos los registros guardados en localStorage
+ */
+let itemsRegistros = obtenerTodosLosRegistros()
+for(let i=0;i<itemsRegistros.length;i++) {
+    let registro = itemsRegistros[i]
+    let titulo = registro["titulo"]
+    let valor = registro["valor"]
+    let esIngreso = registro["esIngreso"]
+    let id = registro["id"]
+    mostrarRegistroEnPantalla(titulo, valor, esIngreso, id)
+}

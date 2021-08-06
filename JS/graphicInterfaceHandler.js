@@ -3,6 +3,70 @@ var elMenuDeEliminacionEstaAbiertoEn = 0; //id del registro que tiene las opcion
 var elMenuDeEdicionEstaAbiertoEn = 0; //id del registro que tiene abierto el menú de edición
 
 /**
+ * Agrega o resta el saldo de la pantalla.
+ * @param {Number} saldoAAgregar saldo a agregar o restar al saldo de 
+ * la pantalla. Esto puede ser un numero positivo o negativo.
+ */
+function modificarSaldoDePantalla(saldoAAgregar) {
+    const saldoEnPantalla = document.querySelector("#txtSaldoActual")
+    const txtSaldo = saldoEnPantalla.innerHTML
+    const valorSaldo = Number.parseInt(txtSaldo)
+    saldoAAgregar = Number.parseInt(saldoAAgregar)
+    if(valorSaldo!=NaN) {
+        const nuevoValor = valorSaldo + saldoAAgregar
+        saldoEnPantalla.innerHTML = nuevoValor
+    }
+}
+
+/**
+ * Si el movimiento que tiene el menú abierto es de tipo ingreso, esto 
+ * retorna true, de lo contrario retorna false.
+ * @returns {Boolean} si el movimiento es un ingreso se retorna true, y
+ * si es egreso retorna false.
+ */
+function elMovimientoRegistradoEsIngreso() {
+    const txtBusqueda = `.item-registro[data-id='${elMenuDeEliminacionEstaAbiertoEn}']`
+    const registro = document.querySelector(txtBusqueda)
+    const claseImgMovimiento = registro.querySelector(".contenedor-registro>img").classList.item(0)
+    if(claseImgMovimiento=="img-adicion") {
+        return true
+    } else {
+        return false
+    }
+}
+
+/**
+ * Retorna el valor del registro que tiene el menú abierto.
+ * @returns {Number} el valor del movimiento.
+ */
+function obtenerValorDelMovimientoRegistrado() {
+    const txtBusqueda = `.item-registro[data-id='${elMenuDeEliminacionEstaAbiertoEn}']`
+    const registro = document.querySelector(txtBusqueda)
+    const valorMovimiento = registro.querySelector(".contenedor-titulo-precio>p:nth-child(2)").innerHTML.substr(1)
+    return valorMovimiento
+}
+
+/**
+ * Le agrega o resta valor al saldo en pantalla según la actualización del registro.
+ * @param {Number} nuevoValor el nuevo valor del movimiento, el cual se actualizó.
+ * @param {Number} antiguoValor el valor que tenia el registro antes de actualizarse.
+ * @param {Boolean} esIngreso si el registro era antes un ingreso esto debe ser true, y
+ * si era un egreso esto es false.
+ */
+function reajustarSaldoDePantalla(nuevoValor, antiguoValor, esIngreso) {
+    let valorAAgregar = 0
+    if(esIngreso) {
+        valorAAgregar = nuevoValor-antiguoValor
+    } else {
+        valorAAgregar = -(nuevoValor-antiguoValor)
+    }
+    let txtSaldoEnPantalla = document.querySelector("#txtSaldoActual")
+    const valorEnPantallaAntiguo = Number.parseInt(txtSaldoEnPantalla.innerHTML)
+    const nuevoValorAAgregarEnPantalla = valorEnPantallaAntiguo + valorAAgregar
+    txtSaldoEnPantalla.innerHTML = nuevoValorAAgregarEnPantalla
+}
+
+/**
  * Desplegar el menú creador el cual permanece oculto,
  * y éste sólo aparece al llamar a esta función.
  */
@@ -30,6 +94,9 @@ function ocultarMenuCreador() {
     setTimeout(() => {
         menuCreador.style = ""
     }, 650)
+    //limpiar los campos
+    menuCreador.querySelector("#tituloMovimiento").value = ""
+    menuCreador.querySelector("#valorMovimiento").value = ""
 }
 
 /**
@@ -171,6 +238,13 @@ function mostrarRegistroEnPantalla(titulo, valor, esIngreso, id) {
     itemRegistro.innerHTML = composicionInterna
     let listaRegistros = document.querySelector("#lista-registros")
     listaRegistros.appendChild(itemRegistro)
+
+    //Modificar el valor del saldo en la pantalla
+    if(esIngreso) {
+        modificarSaldoDePantalla(valor)
+    } else {
+        modificarSaldoDePantalla(-valor)
+    }
 }
 
 /**
@@ -356,6 +430,19 @@ function mostrarMsgError2(mensajeDeError) {
 function actualizarRegistroDePantalla(nuevoTitulo, nuevoValor, esIngreso, idRegistro) {
     const txtBusqueda = `.item-registro[data-id='${elMenuDeEdicionEstaAbiertoEn}']`
     const itemRegistro = document.querySelector(txtBusqueda)
+    
+    //Actualizar el saldo en pantalla elMovimientoEraUnIngreso
+    const txtValorAnteriorDelMovimiento = itemRegistro.querySelector(".contenedor-titulo-precio>p:nth-child(2)").innerHTML.substr(1)
+    let valorAnteriorDelMovimiento = Number.parseInt(txtValorAnteriorDelMovimiento)
+    const claseImgMovimiento = itemRegistro.querySelector(".contenedor-registro>img").classList.item(0)
+    nuevoValor = Number.parseInt(nuevoValor)
+    if(claseImgMovimiento=="img-adicion") {
+        reajustarSaldoDePantalla(nuevoValor, valorAnteriorDelMovimiento, true)
+    } else {
+        reajustarSaldoDePantalla(nuevoValor, valorAnteriorDelMovimiento, false)
+    }
+    
+    //Cambiar el titulo y el valor del registro
     itemRegistro.querySelector(".contenedor-titulo-precio>p:nth-child(1)").innerHTML = nuevoTitulo
     itemRegistro.querySelector(".contenedor-titulo-precio>p:nth-child(2)").innerHTML = "$"+nuevoValor
     if(esIngreso) {
@@ -388,7 +475,11 @@ function mostrarEliminadorDeRegistro(idRegistro) {
     })
 }
 
-
+/**
+ * Oculta el menú de opciones para borrar registros, el cual está 
+ * abierto en alguno de los registros de la pantalla.
+ * @param {Number} idRegistro 
+ */
 function ocultarEliminadorDeRegistro(idRegistro) {
     const capasParaBorrarRegistros = document.querySelectorAll(".opciones-de-borrado")
     capasParaBorrarRegistros.forEach((capa) => {
@@ -402,7 +493,10 @@ function ocultarEliminadorDeRegistro(idRegistro) {
     elMenuDeEliminacionEstaAbiertoEn = 0
 }
 
-
+/**
+ * Borra un registro de pantalla (se quita)
+ * @param {Number} idRegistro 
+ */
 function eliminarRegistroDePantalla(idRegistro) {
     const registros = document.querySelectorAll(".item-registro")
     registros.forEach((itemRegistro)=>{
