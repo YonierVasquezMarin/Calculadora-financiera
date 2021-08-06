@@ -8,6 +8,10 @@ function generarId() {
 
     De esta forma todos los registros tienen id diferentes.
     */
+    let itemsRegistrosJSON = localStorage.getItem("itemsRegistrosJSON")
+    if(itemsRegistrosJSON!=null) {
+        
+    }
 }
 
 function sumarASaldo(valorASumar) {

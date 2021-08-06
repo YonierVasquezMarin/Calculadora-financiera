@@ -1,5 +1,6 @@
 var elMenuEstaDesplegado = false
-var lasOpcionesDeEliminacionEstanEn = 0; //id del registro que tiene las opciones de eliminacion abiertas
+var elMenuDeEliminacionEstaAbiertoEn = 0; //id del registro que tiene las opciones de eliminacion abiertas
+var elMenuDeEdicionEstaAbiertoEn = 0; //id del registro que tiene abierto el menú de edición
 
 /**
  * Desplegar el menú creador el cual permanece oculto,
@@ -146,15 +147,222 @@ function mostrarRegistroEnPantalla(titulo, valor, esIngreso, id) {
                 <span class="btnMostrarOpcionesDeEliminado" title="Eliminar"><img class="btn" alt="boton eliminar"></span>
             </div>
         </div>
+
         <div class="opciones-de-borrado" data-id="${id}">
             <h3>¿Está seguro de borrar esto?</h3>
             <button class="btnBorrarRegistro btn btn-capa-borrado">Borrar</button>
             <button class="btnCancelarBorrado btn btn-capa-borrado">Cancelar</button>
+        </div>
+
+        <div class="editor-de-registro" data-id="${id}">
+            <div class="zona-tipo-ingreso" data-ingreso="${esIngreso?'true':'false'}" data-id="${id}">
+                <img class="img-estado img-tipo-movimiento-${esIngreso?'true':'false'}" alt="signo tipo ingreso">
+                <img class="img-intercambio" alt="simbolo de intercambio">
+            </div>
+            <div class="opciones-de-edicion">
+                <input title="Entrada del nombre del movimiento" type="text" placeholder="Nuevo titulo" class="input-edicion input-nuevo-nombre" data-id="${id}" value="${titulo}">
+                <br>
+                <input title="Entrada del numero del movimiento" type="number" placeholder="Nuevo valor" min="1" class="input-edicion input-nuevo-valor" data-id="${id}" value="${valor}">
+                <span class="txtErrorCamposEdicion">MsgError</span>
+                <button class="botonesEdicion btnActualizar">Actualizar</button>
+                <button class="botonesEdicion btnCancelar">Cancelar</button>
+            </div>
         </div>`
     itemRegistro.innerHTML = composicionInterna
-
     let listaRegistros = document.querySelector("#lista-registros")
     listaRegistros.appendChild(itemRegistro)
+}
+
+/**
+ * Muestra el menú de edición encima del item del registro 
+ * especificado por el id.
+ * @param {Number} idRegistro el id del item del registro.
+ */
+function mostrarEditorDeRegistro(idRegistro) {
+    if(elMenuDeEdicionEstaAbiertoEn!=0) {
+        ocultarEditorDeRegistro(elMenuDeEdicionEstaAbiertoEn)
+    }
+    elMenuDeEdicionEstaAbiertoEn = idRegistro
+    const capasParaEditarRegistros = document.querySelectorAll(".editor-de-registro")
+    capasParaEditarRegistros.forEach((capa) => {
+        if (capa.getAttribute("data-id") == idRegistro) {
+            //Mostrar capa de las opciones de edición
+            capa.style = "display: flex;"
+            setTimeout(() => {
+                capa.style = capa.getAttribute("style") + "opacity: 100%;"
+            }, 100);
+        }
+    })
+}
+
+/**
+ * Cierra el menú de edición del registro con el id dado.
+ * @param {Number} idRegistro el id del registro que tiene abierto el 
+ * menú de edición de registro.
+ */
+function ocultarEditorDeRegistro(idRegistro) {
+    //Cerrar el menú de edición
+    const capasParaEditarRegistros = document.querySelectorAll(".editor-de-registro")
+    capasParaEditarRegistros.forEach((capa) => {
+        if(capa.getAttribute("data-id")==idRegistro) {
+            capa.style = capa.getAttribute("style") + "opacity: 0%;"
+            setTimeout(() => {
+                capa.style = "display: none;"
+            }, 300);
+        }
+    })
+    elMenuDeEdicionEstaAbiertoEn = 0;
+}
+
+/**
+ * Restaura el menú de edición tal cual como esté el registro actual.
+ * @param {Number} idRegistro id del item de registro al cual se le debe restaurar 
+ * el menú de edición.
+ */
+function restaurarEditorDeRegistro(idRegistro) {
+    const itemsRegistros = document.querySelectorAll(".item-registro")
+    itemsRegistros.forEach((item) => {
+        if(item.getAttribute("data-id")==idRegistro) {
+            //Conocer el tipo de movimiento
+            let txtClaseImagen = item.querySelector(".contenedor-registro>img").classList.item(0)
+            if(txtClaseImagen=="img-adicion") {
+                //Restaurar identificador
+                item.querySelector(".zona-tipo-ingreso").setAttribute("data-ingreso", "true")
+                //Restaurar icono
+                item.querySelector(".zona-tipo-ingreso>img").setAttribute("class", "img-estado img-tipo-movimiento-true")
+            } else {
+                //Restaurar identificador
+                item.querySelector(".zona-tipo-ingreso").setAttribute("data-ingreso", "false")
+                //Restaurar icono
+                item.querySelector(".zona-tipo-ingreso>img").setAttribute("class", "img-estado img-tipo-movimiento-false")
+            }
+            //Restaurar entrada nuevo texto
+            let tituloRegistro = item.querySelector(".contenedor-titulo-precio>p:nth-child(1)").innerHTML
+            let valorRegistro = item.querySelector(".contenedor-titulo-precio>p:nth-child(2)").innerHTML
+            item.querySelector(".input-nuevo-nombre").value = tituloRegistro
+            item.querySelector(".input-nuevo-valor").value = valorRegistro.substr(1)
+        }
+    })
+}
+
+/**
+ * Cambiar el simbolo del tipo del movimiento en el menú de edición del registro 
+ * con el id dado.
+ * @param {Number} idRegistro el id del registro que tiene el menú de edición 
+ * abierto y se le va a cambiar el tipo de movimiento (se cambia el simbolo).
+ */
+function cambiarTipoMovimientoEnEditor(idRegistro) {
+    const botonesDeCambioDeEstado = document.querySelectorAll(".zona-tipo-ingreso")
+    botonesDeCambioDeEstado.forEach((boton) => {
+        if(boton.getAttribute("data-id")==idRegistro) {
+            let imgMenuEdicion = boton.querySelector(".img-estado")
+            if(boton.getAttribute("data-ingreso")=="true") {
+                //El simbolo es el de "suma verde"
+                imgMenuEdicion.classList.replace("img-tipo-movimiento-true","img-tipo-movimiento-false")
+                boton.setAttribute("data-ingreso", "false")
+            } else {
+                //El simbolo es el "menos rojo"
+                imgMenuEdicion.classList.replace("img-tipo-movimiento-false","img-tipo-movimiento-true")
+                boton.setAttribute("data-ingreso", "true")
+            }
+        }
+    })
+}
+
+/**
+ * Obtiene el nuevo titulo del movimiento, el cual está en el primer 
+ * campo de texto en el menú de edición abierto.
+ * @param {Number} idRegistro el id del registro que tiene abierto el 
+ * menú de edición.
+ * @returns {String} el nuevo titulo del movimiento ingresado por el 
+ * usuario.
+ */
+function obtenerNuevoTituloDelMovimiento(idRegistro) {
+    let nuevoTitulo = ""
+    const inputsNuevosTitulos = document.querySelectorAll(".input-nuevo-nombre")
+    inputsNuevosTitulos.forEach((input) => {
+        if(input.getAttribute("data-id")==idRegistro) {
+            nuevoTitulo = input.value
+        }
+    })
+    return nuevoTitulo
+}
+
+/**
+ * Obtiene el nuevo valor del movimiento, el cual está en el segundo 
+ * campo de texto en el menú de edición abierto.
+ * @param {Number} idRegistro el id del registro que tiene abierto el 
+ * menú de edición.
+ * @returns {String} el nuevo valor del movimiento.
+ */
+function obtenerNuevoValorDelMovimiento(idRegistro) {
+    let nuevoValor = 0;
+    const inputsNuevosValores = document.querySelectorAll(".input-nuevo-valor")
+    inputsNuevosValores.forEach((input) => {
+        if(input.getAttribute("data-id")==idRegistro) {
+            nuevoValor = input.value
+        }
+    })
+    return nuevoValor
+}
+
+/**
+ * Obtiene el nuevo tipo del movimiento, el cual se determina en el
+ * tipo de simbolo del botón ("+", "-") en el menú de edición abierto.
+ * @param {Number} idRegistro el id del registro que tiene abierto el 
+ * menú de edición.
+ * @returns {Boolean} si es un ingreso retorna true, y si es un egreso 
+ * retorna false.
+ */
+function obtenerNuevoTipoDelMovimiento(idRegistro) {
+    let txtEsIngreso = ""
+    const menusDeEdicion = document.querySelectorAll(".editor-de-registro")
+    menusDeEdicion.forEach((capa) => {
+        if(capa.getAttribute("data-id")==idRegistro) {
+            txtEsIngreso = capa.querySelector(".zona-tipo-ingreso").getAttribute("data-ingreso")
+        }
+    })
+    if(txtEsIngreso=="true") {
+        return true
+    } else {
+        return false
+    }
+}
+
+/**
+ * Muestra el mensaje de error dado en el menú editor que esté abierto.
+ * @param {String} mensajeDeError el mensaje de error que se va a mostrar
+ * en el menú creador del 
+ */
+function mostrarMsgError2(mensajeDeError) {
+    let txtBusqueda = `.editor-de-registro[data-id='${elMenuDeEdicionEstaAbiertoEn}']`
+    let menuEditor = document.querySelector(txtBusqueda)
+    let lineaTxtMsgError = menuEditor.querySelector(".txtErrorCamposEdicion")
+    lineaTxtMsgError.innerHTML = mensajeDeError
+    lineaTxtMsgError.style = "opacity: 100%;"
+    setTimeout(() => {
+        lineaTxtMsgError.style = "opacity: 0%;"
+    }, 3000);
+}
+
+/**
+ * Actualiza el titulo y valor de un registro.
+ * @param {String} nuevoTitulo el nuevo titulo que tendrá el movimiento.
+ * @param {Number} nuevoValor el nuevo valor.
+ * @param {Boolean} esIngreso si el nuevo movimiento es ingreso esto es true y
+ * si es un egreso en un false.
+ * @param {Number} idRegistro el id del registro a modificar.
+ */
+function actualizarRegistroDePantalla(nuevoTitulo, nuevoValor, esIngreso, idRegistro) {
+    const txtBusqueda = `.item-registro[data-id='${elMenuDeEdicionEstaAbiertoEn}']`
+    const itemRegistro = document.querySelector(txtBusqueda)
+    itemRegistro.querySelector(".contenedor-titulo-precio>p:nth-child(1)").innerHTML = nuevoTitulo
+    itemRegistro.querySelector(".contenedor-titulo-precio>p:nth-child(2)").innerHTML = "$"+nuevoValor
+    if(esIngreso) {
+        itemRegistro.querySelector(".contenedor-registro>img").classList.replace("img-substraccion", "img-adicion")
+    } else {
+        itemRegistro.querySelector(".contenedor-registro>img").classList.replace("img-adicion", "img-substraccion")
+    }
 }
 
 /**
@@ -165,10 +373,10 @@ function mostrarRegistroEnPantalla(titulo, valor, esIngreso, id) {
  * en la pantalla.
  */
 function mostrarEliminadorDeRegistro(idRegistro) {
-    if(lasOpcionesDeEliminacionEstanEn!=0) {
-        ocultarEliminadorDeRegistro(lasOpcionesDeEliminacionEstanEn)
+    if(elMenuDeEliminacionEstaAbiertoEn!=0) {
+        ocultarEliminadorDeRegistro(elMenuDeEliminacionEstaAbiertoEn)
     }
-    lasOpcionesDeEliminacionEstanEn = idRegistro
+    elMenuDeEliminacionEstaAbiertoEn = idRegistro
     const capasParaBorrarRegistros = document.querySelectorAll(".opciones-de-borrado")
     capasParaBorrarRegistros.forEach((capa) => {
         if (capa.getAttribute("data-id") == idRegistro) {
@@ -191,7 +399,7 @@ function ocultarEliminadorDeRegistro(idRegistro) {
             }, 300);
         }
     })
-    lasOpcionesDeEliminacionEstanEn = 0
+    elMenuDeEliminacionEstaAbiertoEn = 0
 }
 
 

@@ -70,6 +70,50 @@ const observer = new MutationObserver((mutationList)=>{
         itemRegistro.querySelector(".btnCancelarBorrado").addEventListener("click", ()=>{
             ocultarEliminadorDeRegistro(idItemRegistro)
         })
+        /**
+         * Para cuando se hace click en el botón de editar registro
+         */
+        itemRegistro.querySelector(".btnEditar").addEventListener("click", () => {
+            mostrarEditorDeRegistro(idItemRegistro)
+        })
+        /**
+         * Para cuando se hace click en el botón de cerrar el menú de 
+         * edición.
+         */
+        itemRegistro.querySelector(".btnCancelar").addEventListener("click", () => {
+            ocultarEditorDeRegistro(idItemRegistro)
+            restaurarEditorDeRegistro(idItemRegistro)
+        })
+        /**
+         * Para cuando en el menú de edición se cambia el tipo de movimiento
+         */
+        itemRegistro.querySelector(".zona-tipo-ingreso").addEventListener("click", () => {
+            cambiarTipoMovimientoEnEditor(idItemRegistro)
+        })
+        /**
+         * Para cuando se hace click en el botón de actualizar el registro en el 
+         * menú de edición.
+         */
+        itemRegistro.querySelector(".btnActualizar").addEventListener("click", () => {
+            let nuevoTitulo = obtenerNuevoTituloDelMovimiento(idItemRegistro)
+            let nuevoValor =  obtenerNuevoValorDelMovimiento(idItemRegistro)
+            let losDatosEstanCompletos = losDatosDelMovimientoEstanFull(nuevoTitulo,nuevoValor)
+            if(losDatosEstanCompletos) {
+                let nNuevoValor = Number.parseInt(nuevoValor)
+                let esIngreso = obtenerNuevoTipoDelMovimiento(idItemRegistro)
+                if(nNuevoValor>0) {
+                    actualizarRegistroDePantalla(nuevoTitulo, nuevoValor, esIngreso, idItemRegistro)
+                    ocultarEditorDeRegistro(idItemRegistro)
+                    restaurarEditorDeRegistro(idItemRegistro)
+                } else {
+                    //El nuevo valor ingresado es cero o negativo
+                    mostrarMsgError2("El valor debe ser mayor a 0")
+                }
+            } else {
+                //Alguno o los dos campos están vacíos
+                mostrarMsgError2("Llene todos los campos")
+            }
+        })
     })
 })
 const listaDeRegistros = document.querySelector("#lista-registros")
